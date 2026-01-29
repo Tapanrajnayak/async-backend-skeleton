@@ -37,7 +37,7 @@ What I intentionally didn't build: there's no database, no auth middleware, no c
 ### Example
 
 ```bash
-curl -X POST http://localhost:3000/api/v1/transactions \
+curl -X POST http://localhost:8080/api/v1/transactions \
   -H "Content-Type: application/json" \
   -d '{
     "idempotency_key": "inv-2024-001",
