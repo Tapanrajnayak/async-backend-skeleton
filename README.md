@@ -50,7 +50,8 @@ curl -X POST http://localhost:3000/api/v1/transactions \
 ## Running
 
 ```bash
-cargo run              # starts on :3000
+cargo run              # starts on :8080 by default
+PORT=3000 cargo run    # override with PORT env var
 cargo test             # 21 tests (unit + integration)
 cargo clippy -- -D warnings
 ```

@@ -16,8 +16,19 @@ async fn main() {
     let service = TransactionService::new(storage);
     let app = build_router(service).layer(TraceLayer::new_for_http());
 
-    let addr = "0.0.0.0:3000";
+    let port = std::env::var("PORT").unwrap_or_else(|_| "8080".into());
+    let addr = format!("0.0.0.0:{}", port);
+    let listener = match TcpListener::bind(&addr).await {
+        Ok(l) => l,
+        Err(e) if e.kind() == std::io::ErrorKind::AddrInUse => {
+            tracing::error!("Port {} is already in use. Set a different port with PORT=<number>.", port);
+            std::process::exit(1);
+        }
+        Err(e) => {
+            tracing::error!("Failed to bind to {}: {}", addr, e);
+            std::process::exit(1);
+        }
+    };
     tracing::info!("Listening on {}", addr);
-    let listener = TcpListener::bind(addr).await.expect("Failed to bind");
     axum::serve(listener, app).await.expect("Server error");
 }
